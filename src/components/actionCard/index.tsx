@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import WaterImg from '../../assets/agua.svg'
 import AlongarImg from '../../assets/alongar.svg'
 import { Card, CardImage } from './styles'
@@ -10,14 +9,16 @@ const imageSrc = {
 
 type ActionCardProps = {
   goal: number
+  quantityPerTimeConsumed: number
+  cardImage: 'water'| 'exercise'
 }
 
 
-export default function ActionCard({ goal }:ActionCardProps) {
-  const [cardImage, setCardImage] = useState<'water'| 'exercise'>('water')
+export default function ActionCard({ goal, cardImage, quantityPerTimeConsumed }:ActionCardProps) {
+  const percentageAchieved = (quantityPerTimeConsumed / goal) * 100;
   return (
     <Card>
-     <p>80%</p>
+      <p>{!isNaN(percentageAchieved) ? `${percentageAchieved.toFixed(1)}%` : ''}</p>
       <CardImage src={imageSrc[cardImage]} />
       <span>
         <h1>Beber água</h1>

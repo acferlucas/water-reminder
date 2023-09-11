@@ -13,6 +13,7 @@ export const Card = styled('div', {
   textAlign: 'center',
 
   p: {
+    height: '30px',
     fontSize: '$sm-m',
     fontWeight: 'bold'
   },

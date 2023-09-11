@@ -18,6 +18,10 @@ export const Button = styled('button', {
     backgroundColor: '$blue-dark',
     cursor: 'pointer',
   },
+  '&:disabled': {
+    backgroundColor: '$blue-dark',
+    cursor: 'default',
+  },
   svg: {
     width: '24px',
     height: '24px'

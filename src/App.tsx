@@ -1,7 +1,5 @@
-import iconImg from './assets/icon.svg'
-import acenoImg from './assets/emoji.svg'
 import { globalCss, styled } from './styles'
-import { ActionCard, Button, InputTimer, SliderInput, ReminderModal } from './components';
+import { ActionCard, Button, InputTimer, SliderInput, Header, Modal } from './components';
 import { ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 
@@ -56,55 +54,34 @@ const Wrapper = styled('div', {
 
 })
 
-const Header = styled('header', {
-  height: '3.9375rem',
-  width: '12.1875rem',
-  display: 'flex',
-  gap: '0.5rem',
-
-  fontSize: '$md',
-  fontWeight: '$light',
-  color: '$gray-100',
-
-  img: {
-    height: '4rem',
-  },
-
-  span: {
-    width: '7.625rem',
-
-    p: {
-      img: {
-        marginLeft: '10px',
-        height: '1.5625rem',
-      }
-    }
-  },
-  
-})
-
-
 function App() {
   globalStyles();
+  
   const [openModal, setOpenModal] = useState(false)
   const [goal, setGoal] = useState(0)
   const [quantityPerTime, setQuantityPerTime] = useState(0)
   const [quantityPerTimeConsumed, setQuantityPerTimeConsumed] = useState(0);
   
-  const [tempoTimerHours, setTempoTimerHours] = useState(0);
-  const [tempoTimerMinutes, setTempoTimerMinutes] = useState(0);
+  const [timerHours, setTimerHours] = useState(0);
+  const [timerMinutes, setTimerMinutes] = useState(0);
+  
+  const [isJobRunning, setIsJobRunning] = useState(false);
 
   function clearApplication() {
     setGoal(0)
     setQuantityPerTime(0)
     setQuantityPerTimeConsumed(0)
-    setTempoTimerHours(0)
-    setTempoTimerMinutes(0)
+    setTimerHours(0)
+    setTimerMinutes(0)
+
+    setIsJobRunning(false) 
+
   }
   
   function handlerStart() {
-    alert('job is running...')
-    const totalTimeInMinutes = tempoTimerHours * 60 + tempoTimerMinutes;
+    
+    setIsJobRunning(true)
+    const totalTimeInMinutes = timerHours * 60 + timerMinutes;
   
     try {
       if (!isNaN(goal) && !isNaN(quantityPerTime) && !isNaN(totalTimeInMinutes)) {
@@ -118,7 +95,6 @@ function App() {
 
         let quantityPerTimeConsumedCount = 0;
   
-        // Cria um timer para notificar o usuário a cada totalTimeInMinutes minutos.
         const timerInterval = setInterval(() => {
           if (quantityPerTimeConsumedCount < goal) {
             setQuantityPerTimeConsumed((prevQuantity) => prevQuantity + quantityPerTime);
@@ -127,10 +103,10 @@ function App() {
             quantityPerTimeConsumedCount += quantityPerTime;
           } else {
             clearInterval(timerInterval);
-            clearApplication() 
+            clearApplication()
             alert('Meta atingida! Não é mais necessário beber água.');
           }
-        }, 1000); //totalTimeInMinutes * 60000
+        }, 3000); //totalTimeInMinutes * 60000
   
       } else {
         throw new Error('Some parameters are required and are not provided');
@@ -145,17 +121,9 @@ function App() {
   return (
     <main>
       <Wrapper>
-        <Header>
-          <img src={iconImg} alt="avatar" />
-          <span>
-            <p>
-              Boa tarde, <strong>Biro {quantityPerTimeConsumed}</strong>
-              <img src={acenoImg} alt="aceno" />
-            </p>
-          </span>
-        </Header>
+       <Header />
         <div>
-          <ActionCard goal={goal} />
+          <ActionCard goal={goal} quantityPerTimeConsumed={quantityPerTimeConsumed} cardImage='water'  />
           <section>
             
             <SliderInput 
@@ -169,14 +137,15 @@ function App() {
               goal={quantityPerTime}
               handlerChangeGoal={setQuantityPerTime} 
             />
+            
             <InputTimer 
-              tempoTimerHours={tempoTimerHours} 
-              tempoTimerMinutes={tempoTimerMinutes} 
-              handlerChangeHours={setTempoTimerHours}
-              handlerChangeMinutes={setTempoTimerMinutes} 
+              timerHours={timerHours} 
+              timerMinutes={timerMinutes} 
+              handlerChangeHours={setTimerHours}
+              handlerChangeMinutes={setTimerMinutes} 
             />
 
-            <Button onClick={handlerStart} >
+            <Button onClick={handlerStart} disabled={isJobRunning} >
               começar 
               <ChevronRight />
             </Button>
@@ -184,15 +153,10 @@ function App() {
           </section>
         </div>
       </Wrapper>
-      {
-        openModal && (
-          <ReminderModal.layout>
-            <ReminderModal.button handlerButtonClicked={() => setOpenModal(!openModal)} />
-            <ReminderModal.image type='water' />
-            <ReminderModal.text text='lembrete para beber água' />
-          </ReminderModal.layout>
-        )
-      }
+      <Modal 
+        isOpen={openModal} 
+        onClose={() => setOpenModal(!openModal)} 
+      />
     </main>
   )
 }

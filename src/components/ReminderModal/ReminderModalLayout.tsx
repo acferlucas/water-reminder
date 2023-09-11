@@ -1,11 +1,13 @@
 import { PropsWithChildren } from 'react'
-import { ModalBox } from './styles'
+import { ModalBox, ModalOverlay } from './styles'
 
 
 export function ReminderModalLayout({ children }: PropsWithChildren) {
   return (
-    <ModalBox>
-      {children}
-    </ModalBox>
+    <ModalOverlay>
+      <ModalBox>
+        {children}
+      </ModalBox>
+    </ModalOverlay>
   )
 }
