@@ -137,7 +137,7 @@ function App() {
               goal={quantityPerTime}
               handlerChangeGoal={setQuantityPerTime} 
             />
-            
+
             <InputTimer 
               timerHours={timerHours} 
               timerMinutes={timerMinutes} 

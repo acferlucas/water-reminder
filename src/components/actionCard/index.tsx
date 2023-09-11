@@ -7,6 +7,11 @@ const imageSrc = {
   exercise: AlongarImg
 }
 
+const cardDescription = {
+  water: 'Beber água',
+  exercise: 'Alongar'
+}
+
 type ActionCardProps = {
   goal: number
   quantityPerTimeConsumed: number
@@ -21,8 +26,9 @@ export default function ActionCard({ goal, cardImage, quantityPerTimeConsumed }:
       <p>{!isNaN(percentageAchieved) ? `${percentageAchieved.toFixed(1)}%` : ''}</p>
       <CardImage src={imageSrc[cardImage]} />
       <span>
-        <h1>Beber água</h1>
-        <p>Meta: {goal / 1000}L</p>
+        <h1>{cardDescription[cardImage]}</h1>
+        {cardImage === 'water' && <p>Meta: {goal / 1000}L</p>}
+        {cardImage === 'exercise' && <p>Meta: {goal}X</p>}
       </span>
     </Card>
   )
