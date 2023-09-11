@@ -1,9 +1,13 @@
 import { X } from "lucide-react";
 import { ButtonModal } from "./styles";
 
-export function ReminderModalButton() {
+type ReminderModalButtonProps = {
+  handlerButtonClicked: () => void
+}
+
+export function ReminderModalButton({ handlerButtonClicked } : ReminderModalButtonProps) {
   return (
-      <ButtonModal>
+      <ButtonModal onClick={handlerButtonClicked}>
         <X />
       </ButtonModal>
   )

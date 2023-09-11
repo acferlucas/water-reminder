@@ -1,9 +1,9 @@
 import iconImg from './assets/icon.svg'
 import acenoImg from './assets/emoji.svg'
 import { globalCss, styled } from './styles'
-import { ActionCard, Button, InputTimer, Slider, SliderInput } from './components';
+import { ActionCard, Button, InputTimer, SliderInput, ReminderModal } from './components';
 import { ChevronRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const globalStyles = globalCss({
   '*': { margin: 0, padding: 0},
@@ -86,6 +86,7 @@ const Header = styled('header', {
 
 function App() {
   globalStyles();
+  const [openModal, setOpenModal] = useState(false)
   const [goal, setGoal] = useState(0)
   const [quantityPerTime, setQuantityPerTime] = useState(0)
   const [quantityPerTimeConsumed, setQuantityPerTimeConsumed] = useState(0);
@@ -93,56 +94,50 @@ function App() {
   const [tempoTimerHours, setTempoTimerHours] = useState(0);
   const [tempoTimerMinutes, setTempoTimerMinutes] = useState(0);
 
+  function clearApplication() {
+    setGoal(0)
+    setQuantityPerTime(0)
+    setQuantityPerTimeConsumed(0)
+    setTempoTimerHours(0)
+    setTempoTimerMinutes(0)
+  }
+  
   function handlerStart() {
-    console.log('job is running...')
+    alert('job is running...')
     const totalTimeInMinutes = tempoTimerHours * 60 + tempoTimerMinutes;
   
     try {
       if (!isNaN(goal) && !isNaN(quantityPerTime) && !isNaN(totalTimeInMinutes)) {
-
-      
-        const remindersNeeded = Math.ceil(goal / quantityPerTime);
-        const timeBetweenRemindersMillis = (totalTimeInMinutes * 60 * 1000) / remindersNeeded;
-  
-        if(quantityPerTime > goal) {
-          throw new Error('quantityPerTime cannot be greater than goal')
+        if (quantityPerTime > goal) {
+          throw new Error('quantityPerTime cannot be greater than goal');
         }
   
-        if(totalTimeInMinutes <= 0 || goal <= 0 || quantityPerTime <= 0 ) {
-          throw new Error('Inputs must be greater than 0 ')
+        if (totalTimeInMinutes <= 0 || goal <= 0 || quantityPerTime <= 0) {
+          throw new Error('Inputs must be greater than 0 ');
         }
 
-        let remindersCount = 0
-    
-        const timer = setInterval(() => {
+        let quantityPerTimeConsumedCount = 0;
+  
+        // Cria um timer para notificar o usuário a cada totalTimeInMinutes minutos.
+        const timerInterval = setInterval(() => {
+          if (quantityPerTimeConsumedCount < goal) {
             setQuantityPerTimeConsumed((prevQuantity) => prevQuantity + quantityPerTime);
-            remindersCount++;
-
-            console.log(remindersCount)
+            
+            setOpenModal(true)
+            quantityPerTimeConsumedCount += quantityPerTime;
+          } else {
+            clearInterval(timerInterval);
+            clearApplication() 
+            alert('Meta atingida! Não é mais necessário beber água.');
+          }
+        }, 1000); //totalTimeInMinutes * 60000
   
-            if (remindersCount >= remindersNeeded) {
-              clearInterval(timer);
-              setGoal(0),
-              setQuantityPerTime(0),
-              setTempoTimerHours(0)
-              setTempoTimerMinutes(0)
-
-            } else {
-              alert('Lembre-se de beber água!'); 
-            }
-          
-         
-        }, timeBetweenRemindersMillis);
-    
-        return () => {
-          clearInterval(timer);
-        };
+      } else {
+        throw new Error('Some parameters are required and are not provided');
       }
-
-      throw new Error('some parameters are required and cannot be provided')
-    } catch(err) {
-      if( err instanceof Error) {
-        alert(err.message)
+    } catch (err) {
+      if (err instanceof Error) {
+        alert(err.message);
       }
     }
   }
@@ -170,7 +165,7 @@ function App() {
             />
 
             <SliderInput 
-              text='QuantityPerTime por timer'
+              text='Quantidade por timer'
               goal={quantityPerTime}
               handlerChangeGoal={setQuantityPerTime} 
             />
@@ -189,6 +184,15 @@ function App() {
           </section>
         </div>
       </Wrapper>
+      {
+        openModal && (
+          <ReminderModal.layout>
+            <ReminderModal.button handlerButtonClicked={() => setOpenModal(!openModal)} />
+            <ReminderModal.image type='water' />
+            <ReminderModal.text text='lembrete para beber água' />
+          </ReminderModal.layout>
+        )
+      }
     </main>
   )
 }
