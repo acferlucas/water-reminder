@@ -1,3 +1,4 @@
+import { PropsWithChildren } from 'react'
 import WaterImg from '../../assets/agua.svg'
 import AlongarImg from '../../assets/alongar.svg'
 import { Card, CardImage } from './styles'
@@ -19,7 +20,7 @@ type ActionCardProps = {
 }
 
 
-export default function ActionCard({ goal, cardImage, quantityPerTimeConsumed }:ActionCardProps) {
+export default function ActionCard({ goal, cardImage, quantityPerTimeConsumed, children }:PropsWithChildren<ActionCardProps>) {
   const percentageAchieved = (quantityPerTimeConsumed / goal) * 100;
   return (
     <Card>
@@ -27,8 +28,7 @@ export default function ActionCard({ goal, cardImage, quantityPerTimeConsumed }:
       <CardImage src={imageSrc[cardImage]} />
       <span>
         <h1>{cardDescription[cardImage]}</h1>
-        {cardImage === 'water' && <p>Meta: {goal / 1000}L</p>}
-        {cardImage === 'exercise' && <p>Meta: {goal}X</p>}
+        {children}
       </span>
     </Card>
   )

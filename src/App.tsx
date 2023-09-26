@@ -1,58 +1,8 @@
-import { globalCss, styled } from './styles'
-import { ActionCard, Button, InputTimer, SliderInput, Header, Modal } from './components';
+import { ActionCard, Button, InputTimer, SliderInput, Header, Modal, ReminderModal } from './components';
 import { ChevronRight } from 'lucide-react';
 import { useState } from 'react';
+import { Wrapper, globalStyles } from './styles/global';
 
-const globalStyles = globalCss({
-  '*': { margin: 0, padding: 0},
-  main: { 
-    background: '#000000',
-    height: '100vh',
-    width: '100%',
-    
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-});
-
-const Wrapper = styled('div', {
-  width: '39.375rem',
-  height: '30.5625rem',
-
-  fontFamily: '$default',
-
-  '& > div': {
-    width: '39.375rem',
-    height: '21.875rem',
-    marginTop: '4.6rem',
-
-    display: 'flex',
-    gap: '3rem',
-    
-    section: {
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-            
-      gap: '2rem',
-
-      '& > div:nth-child(3)': {
-        marginLeft: 'auto',
-        marginRight: 'auto',
-      },
-      
-      button: {
-        width: '100%',
-        marginTop: 'auto',
-      }
-
-    },
-
-
-  }
-
-})
 
 function App() {
   globalStyles();
@@ -122,10 +72,18 @@ function App() {
     <main>
       <Wrapper>
        <Header />
+
         <div>
-          <ActionCard goal={goal} quantityPerTimeConsumed={quantityPerTimeConsumed} cardImage='water'  />
+
+          <ActionCard 
+            goal={goal} 
+            quantityPerTimeConsumed={quantityPerTimeConsumed} 
+            cardImage='water'
+          >
+           <p>Meta: {goal / 1000}L</p>
+          </ActionCard>
+
           <section>
-            
             <SliderInput 
               text='Meta diária'
               goal={goal}
@@ -149,14 +107,16 @@ function App() {
               começar 
               <ChevronRight />
             </Button>
-
           </section>
+
         </div>
+
       </Wrapper>
-      <Modal 
-        isOpen={openModal} 
-        onClose={() => setOpenModal(!openModal)} 
-      />
+      <Modal isOpen={openModal}>
+        <ReminderModal.button handlerButtonClicked={() => setOpenModal(!openModal)} />
+        <ReminderModal.image type='water' />
+        <ReminderModal.text text='lembrete para beber água' />
+      </Modal>
     </main>
   )
 }

@@ -1,20 +1,18 @@
+import { PropsWithChildren } from "react";
 import { ReminderModal } from "..";
 
 type ModalProps = {
   isOpen: boolean;
-  onClose: () => void
 }
 
-export default function Modal({ isOpen, onClose }: ModalProps) {
+export default function Modal({ isOpen, children }: PropsWithChildren<ModalProps>) {
   if(!isOpen) {
     return null;
   }
 
   return (
     <ReminderModal.layout>
-      <ReminderModal.button handlerButtonClicked={onClose} />
-      <ReminderModal.image type='water' />
-      <ReminderModal.text text='lembrete para beber água' />
+     { children }
     </ReminderModal.layout>
   )
 }
