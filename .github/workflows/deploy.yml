@@ -20,6 +20,4 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
-      - name: Deploy static content
-        run: npm run deploy
       
