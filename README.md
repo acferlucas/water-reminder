@@ -6,3 +6,5 @@ Esse desafio foi criado para o #boracodar, um projeto da Rocketseat com desafios
 # Layout Watter Reminder
 ![layout GIF](src/assets/readme/water.gif)
 
+Link do app : https://acferlucas.github.io/water-reminder/
+
